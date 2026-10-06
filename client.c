@@ -215,7 +215,7 @@ int main(int argc, char *argv[]) {
 			printf("ID: %d\n", buffer[1]);
 				//Per posar el nom hem de copiar el nom que teniem guardat a nou.nom
 			printf("Nom: %s\n", nou.nom);
-			printf("Mitjana: %.2f\n", buffer[52]);
+			printf("Mitjana: %.2d\n", buffer[52]);
 			printf("Edat: %d\n", buffer[53]);
 			
 			
@@ -232,8 +232,10 @@ int main(int argc, char *argv[]) {
 			int i;
 
 			// Enviar la comanda al servidor perque sapiga que ha de llistar
-			strcpy(llista, "4");
-			if(send(sock,llista, strlen(alumne), 0) < 0){
+			memset(buffer, 0, BUFFER_SIZE);
+			buffer[0] = 4;
+
+			if(send(sock,buffer, BUFFER_SIZE, 0) < 0){
 				printf("Error en enviar la comanda\n");
 				break;
 			}
@@ -269,7 +271,7 @@ int main(int argc, char *argv[]) {
 				//Per posar el nom hem de copiar el nom que teniem guardat a nou.nom
 				memcpy(nou.nom, &buffer[1], 50);
 				printf("Nom: %s", nou.nom);
-				printf("Mitjana: %.2f\n", buffer[52]);
+				printf("Mitjana: %.2d\n", buffer[52]);
 				printf("Edat: %d\n", buffer[53]);
 			
 			}
@@ -288,8 +290,10 @@ int main(int argc, char *argv[]) {
 			int dades_rebudes;
 
 			// Enviar la comanda al servidor perque sapiga que ha de fer
-			strcpy(llista, "5");
-			if(send(sock, llista, strlen(alumne), 0) < 0){
+			memset(buffer, 0, BUFFER_SIZE);
+			buffer[0] = 5;
+
+			if(send(sock, buffer, BUFFER_SIZE, 0) < 0){
 				printf("Error en enviar la comanda d'eliminacio\n");
 				break;
 			}
