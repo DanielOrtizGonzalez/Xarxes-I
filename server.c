@@ -127,7 +127,7 @@ int main(int argc, char *argv[]) {
 
 					alumne nou;
 
-					strcopy(nou.nom, buffer+1);
+					strcpy(nou.nom, buffer+1);
 					nou.nom[strcspn(nou.nom, "\n")] = '\0';  // Eliminar \n final
 
 					memcpy(&nou.id, buffer+51, sizeof(int));

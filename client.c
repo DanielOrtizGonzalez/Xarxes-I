@@ -233,7 +233,7 @@ int main(int argc, char *argv[]) {
 
 			// Enviar la comanda al servidor perque sapiga que ha de llistar
 			strcpy(llista, "4");
-			if(send(sock,llista, strlen(llista), 0) < 0){
+			if(send(sock,llista, strlen(alumne), 0) < 0){
 				printf("Error en enviar la comanda\n");
 				break;
 			}
@@ -254,7 +254,7 @@ int main(int argc, char *argv[]) {
 			for(i = 0; i < trans; i++){
 				
 				// Llegeix les dades que envia el servidor i comprova que no hi haa errors
-				int dades = recv(sock, &nou, sizeof(alumne), 0);
+				int dades = recv(sock, &buffer, sizeof(alumne), 0);
 				if (dades <=0){
 
 					printf("Error en rebre les dades de l'alumne\n");
@@ -262,8 +262,16 @@ int main(int argc, char *argv[]) {
 				}
 
 				// Mostrar les dades rebudes d'alumnes
-				printf("%d. ID: %d | Nom: %s | Mitjana: %.2f | Edat: %d\n",
-					 i + 1, nou.id, nou.nom, nou.mitjana, nou.edat);
+				//printf("%d. ID: %d | Nom: %s | Mitjana: %.2f | Edat: %d\n",
+				//	 i + 1, nou.id, nou.nom, nou.mitjana, nou.edat);
+				
+				printf("ID: %d\n", buffer[51]);
+				//Per posar el nom hem de copiar el nom que teniem guardat a nou.nom
+				memcpy(nou.nom, &buffer[1], 50);
+				printf("Nom: %s", nou.nom);
+				printf("Mitjana: %.2f\n", buffer[52]);
+				printf("Edat: %d\n", buffer[53]);
+			
 			}
 
 			printf("--------------------------------------\n");
@@ -281,7 +289,7 @@ int main(int argc, char *argv[]) {
 
 			// Enviar la comanda al servidor perque sapiga que ha de fer
 			strcpy(llista, "5");
-			if(send(sock, llista, strlen(llista), 0) < 0){
+			if(send(sock, llista, strlen(alumne), 0) < 0){
 				printf("Error en enviar la comanda d'eliminacio\n");
 				break;
 			}
