@@ -98,10 +98,10 @@ int main(int argc, char *argv[]) {
 
 		printf("Menú principal:\n");
 		printf("1. Enviar missatge\n");
-		printf("2. Opció 2\n");
-		printf("3. Opció 3\n");
-		printf("4. Opció 4\n");
-		printf("5. Opció 5\n");
+		printf("2. Opció 2: Afegir Alumne\n");
+		printf("3. Opció 3: Consultar Alumne\n");
+		printf("4. Opció 4: Llistar Alumne\n");
+		printf("5. Opció 5: Eliminar alumne\n");
 		printf("6. Sortir\n");
 		printf("Opció: ");
 
