@@ -21,7 +21,7 @@ typedef struct{
 
 int main(int argc, char *argv[]) {
 	
-	// Estrucutura d'alumne i llista
+	// Estrucutura d'alumne i llistas
 	alumne nou;
 	alumne llista[200]; 
 	char dades_alumne[BUFFER_SIZE];
