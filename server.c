@@ -174,7 +174,24 @@ int main(int argc, char *argv[]) {
 				int num_net = htonl(total_alumnes); // Convertim el nombre d'alumnes a format de xarxa
 				send(new_socket, &num_net, sizeof(num_net), 0); // Enviem el nombre d'alumnes al client
 
+				strcpy(buffer+1, nou.nom);
+				memcpy(buffer+51, &nou.id, sizeof(nou.id));
+				memcpy(buffer+52, &nou.mitjana, sizeof(nou.mitjana));
+				memcpy(buffer+53, &nou.edat, sizeof(nou.edat));
+			
+				//enviem el buffer a traves del sock i borrem tota l'informacio del buffer (incluim un control d'errors al send)
+				if (send(sock, buffer, BUFFER_SIZE, 0) < 0) {
+					printf("Error en enviar la comanda\n");
+					break;
+				}
+				memset(buffer, 0, BUFFER_SIZE);
+
+				//Rebem la resposta del servidor (incluim un control d'errors al recv);
+				if (recv(sock, buffer, BUFFER_SIZE,0) < 0) {
 				
+					printf("Error en rebre la resposta del servidor\n");
+					break;
+				}
 
 			} 
 			
