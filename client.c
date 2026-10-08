@@ -1,5 +1,5 @@
 // client.c
-#include <stdio.h>/////////////////////////////////////
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -10,6 +10,7 @@
 #define DEFAULT_DOMAIN "localhost"
 #define BUFFER_SIZE 1024
 
+//Creem l'estructura per guardar les dades de l'alumne
 typedef struct{
 
 	int id; //longitud de 7 nombre maxim
