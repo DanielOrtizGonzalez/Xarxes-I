@@ -126,6 +126,7 @@ int main(int argc, char *argv[]) {
 				if(total_alumnes < 200){
 
 					alumne nou;
+					memset(buffer, 0, BUFFER_SIZE);
 
 					strcpy(nou.nom, buffer+1);
 					nou.nom[strcspn(nou.nom, "\n")] = '\0';  // Eliminar \n final
