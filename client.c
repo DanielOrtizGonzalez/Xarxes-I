@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
 
 
 	// Crear el socket
-	if((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+	if((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) { //L'argument AF_INET 
 		printf("\nError en crear el socket\n");
 		return -1;
 	}
