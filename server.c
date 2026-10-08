@@ -174,12 +174,7 @@ int main(int argc, char *argv[]) {
 				int num_net = htonl(total_alumnes); // Convertim el nombre d'alumnes a format de xarxa
 				send(new_socket, &num_net, sizeof(num_net), 0); // Enviem el nombre d'alumnes al client
 
-				for(int i = 0; i < total_alumnes; i++){
-					
-					buffer = pasar_buffer(char buffer, llista_alumnes[i]);
-
-					send(new_socket, buffer, sizeof(alumne), 0); // Enviem cada alumne al client
-				}
+				
 
 			} 
 			

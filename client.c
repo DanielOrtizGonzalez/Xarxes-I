@@ -271,7 +271,7 @@ int main(int argc, char *argv[]) {
 				printf("ID: %d\n", buffer[51]);
 				//Per posar el nom hem de copiar el nom que teniem guardat a nou.nom
 				memcpy(nou.nom, &buffer[1], 50);
-				printf("Nom: %s", nou.nom);
+				printf("Nom: %s\n", nou.nom);
 				printf("Mitjana: %.2d\n", buffer[52]);
 				printf("Edat: %d\n", buffer[53]);
 			
