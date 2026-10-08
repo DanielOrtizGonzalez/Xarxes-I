@@ -61,8 +61,8 @@ int main(int argc, char *argv[]) {
 
 
 	// Crear el socket
-	if((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) { //L'argument AF_INET 
-		printf("\nError en crear el socket\n");
+	if((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) { //L'argument AF_INET es la familia d'adreces IPv4, el SOCK_STREAM es el tipus de comunicacions en aquest cas es TCP, el "0" es el protocol en aquest cas TCP
+		printf("\nError en crear el socket\n"); //Per el segon argument tambe hi ha la opcio "SOCK_DATAGRAM" que posa el tipus de comunicacio a UDP
 		return -1;
 	}
 	// Afegiu comentari explicant els arguments, i de quines altres opcions hi ha
