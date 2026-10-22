@@ -129,10 +129,10 @@ int main(int argc, char *argv[]) {
 
 					strcpy(nou.nom, buffer+1);
 					nou.nom[strcspn(nou.nom, "\n")] = '\0';  // Eliminar \n final
-
+					//Posible error amb els sizeof
 					memcpy(&nou.id, buffer+51, sizeof(int));
-					memcpy(&nou.mitjana, buffer+52, sizeof(float));
-					memcpy(&nou.edat, buffer+53, sizeof(int));
+					memcpy(&nou.mitjana, buffer+55, sizeof(float));
+					memcpy(&nou.edat, buffer+59, sizeof(int));
 
 					llista_alumnes[total_alumnes] = nou;
 					total_alumnes++;

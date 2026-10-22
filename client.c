@@ -13,8 +13,8 @@
 //Creem l'estructura per guardar les dades de l'alumne
 typedef struct{
 
-	int id; //longitud de 7 nombre maxim
-	char nom[50];
+	int id; //longitud de 7 nombres maxim
+	char nom[49];
 	float mitjana;
 	int edat;
 } alumne;
@@ -156,6 +156,7 @@ int main(int argc, char *argv[]) {
 
 			printf("Introdueix mitjana: ");
 			scanf("%f", &nou.mitjana);
+			
 			printf("Introdueix edat: ");
 			scanf("%d", &nou.edat);
 			while (getchar() != '\n');  // buida el buffer fins al salt de línia
@@ -165,8 +166,8 @@ int main(int argc, char *argv[]) {
 			//Cargem al buffer totes les dades que volem enviar
 			strcpy(buffer+1, nou.nom);
 			memcpy(buffer+51, &nou.id, sizeof(nou.id));
-			memcpy(buffer+52, &nou.mitjana, sizeof(nou.mitjana));
-			memcpy(buffer+53, &nou.edat, sizeof(nou.edat));
+			memcpy(buffer+55, &nou.mitjana, sizeof(nou.mitjana));
+			memcpy(buffer+59, &nou.edat, sizeof(nou.edat));
 			
 			//enviem el buffer a traves del sock i borrem tota l'informacio del buffer (incluim un control d'errors al send)
 			if (send(sock, buffer, BUFFER_SIZE, 0) < 0) {
@@ -216,8 +217,8 @@ int main(int argc, char *argv[]) {
 			printf("ID: %d\n", buffer[1]);
 				//Per posar el nom hem de copiar el nom que teniem guardat a nou.nom
 			printf("Nom: %s\n", nou.nom);
-			printf("Mitjana: %.2d\n", buffer[52]);
-			printf("Edat: %d\n", buffer[53]);
+			printf("Mitjana: %.2d\n", buffer[55]);
+			printf("Edat: %d\n", buffer[59]);
 			
 			
 			
