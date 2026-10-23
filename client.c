@@ -145,7 +145,7 @@ int main(int argc, char *argv[]) {
 		case 2:{
 
 			alumne nou;
-
+			
 			// AFEGIR ALUMNE
 			//Demanem totes les dades al client i les guardem a una estructura
 			printf("Introdueix la ID: ");
@@ -163,8 +163,9 @@ int main(int argc, char *argv[]) {
 			scanf("%d", &nou.edat);
 			while (getchar() != '\n');  // buida el buffer fins al salt de línia
 
+			memset(buffer, 0, BUFFER_SIZE);
 			//Senyalitzem que es la funcio 2 la que estem demanant a la primera posició del buffer
-			strcpy(buffer, "2");
+			buffer[0] = '2';
 			//Cargem al buffer totes les dades que volem enviar
 			strcpy(buffer+1, nou.nom);
 			memcpy(buffer+51, &nou.id, sizeof(int));
@@ -179,7 +180,7 @@ int main(int argc, char *argv[]) {
 			memset(buffer, 0, BUFFER_SIZE);
 
 			//Rebem la resposta del servidor (incluim un control d'errors al recv);
-			if (recv(sock, buffer, BUFFER_SIZE,0) < 0) {
+			if (recv(sock, buffer, BUFFER_SIZE,0) <= 0) {
 				
 				printf("Error en rebre la resposta del servidor\n");
 				break;
@@ -199,7 +200,7 @@ int main(int argc, char *argv[]) {
 			nou.nom[strcspn(nou.nom, "\n")] = '\0';  // Eliminar \n final
 
 			memset(buffer, 0, BUFFER_SIZE);
-			strcpy(buffer, "3");
+			buffer[0] = '3';
 			strcpy(buffer+1, nou.nom);
 			
 			if (send(sock, buffer, BUFFER_SIZE, 0) < 0) {
@@ -215,8 +216,7 @@ int main(int argc, char *argv[]) {
 				break;
 			}
 			printf("Resposta del servidor: %s\n", buffer);
-			//Crearem una funcio que agafara el buffer(60 posicions) que tindra la id, el nom, la mitja i l'edat, i les ensenyara per pantalla
-			break;
+			
 
 		case 4: {
 			

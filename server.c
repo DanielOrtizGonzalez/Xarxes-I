@@ -145,8 +145,8 @@ int main(int argc, char *argv[]) {
 				}
 			} else if(buffer[0] == '3'){
 
-				char nom_buscar[50]; // Variable per guardar el nom que el client vol consultar
-               	strcpy(nom_buscar, buffer + 1); // Extraiem el nom copiant des de la posició buffer + 1
+				char nom_buscar[50] = {0}; // Variable per guardar el nom que el client vol consultar
+               	strncpy(nom_buscar, buffer + 1, 49); // Extraiem el nom copiant des de la posició buffer + 1
                	nom_buscar[strcspn(nom_buscar, "\n")] = '\0'; // Netegem qualsevol salt de línia (\n) que hagi pogut posar el fgets del client
 
                	int trobat = -1; // Variable per guardar l'índex de l'alumne si el trobem (-1 vol dir no trobat)
