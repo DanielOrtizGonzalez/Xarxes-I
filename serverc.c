@@ -122,7 +122,7 @@ int main(int argc, char *argv[]) {
                     llista_alumnes[total_alumnes] = nou;
                     total_alumnes++;
 
-                    printf("Alumne afegit -> ID: %d, Nom: %s\n", nou.id, nou.nom);
+                    printf("Alumne afegit -> ID: %d, Nom: %s, mitjana: %.2f, edat: %d\n", nou.id, nou.nom, nou.mitjana, nou.edat);
                     send(new_socket, "Alumne afegit correctament\n", strlen("Alumne afegit correctament\n"), 0);
                 } else {
                     send(new_socket, "Error: Llista d'alumnes plena\n", strlen("Error: Llista d'alumnes plena\n"), 0);

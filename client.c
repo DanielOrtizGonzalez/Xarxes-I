@@ -143,8 +143,6 @@ int main(int argc, char *argv[]) {
 			break;
 
 		case 2:{
-
-			alumne nou;
 			
 			// AFEGIR ALUMNE
 			//Demanem totes les dades al client i les guardem a una estructura
@@ -191,8 +189,6 @@ int main(int argc, char *argv[]) {
 		}
 
 		case 3:
-			
-			alumne nou;
 
 			// Consultar Alumne
 			printf("Introdueix nom de l'alumne: ");
