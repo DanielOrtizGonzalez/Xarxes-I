@@ -167,7 +167,7 @@ int main(int argc, char *argv[]) {
                            	 llista_alumnes[trobat].mitjana, llista_alumnes[trobat].edat);
     			} 
 			} else if(buffer[0] == 4){
-
+				alumne nou;
 				printf("Enviant llista de %d alumnes...\n", total_alumnes);
 
 				int num_net = htonl(total_alumnes); // Convertim el nombre d'alumnes a format de xarxa

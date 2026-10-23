@@ -142,7 +142,9 @@ int main(int argc, char *argv[]) {
 			}
 			break;
 
-		case 2:
+		case 2:{
+
+			alumne nou;
 
 			// AFEGIR ALUMNE
 			//Demanem totes les dades al client i les guardem a una estructura
@@ -165,9 +167,9 @@ int main(int argc, char *argv[]) {
 			strcpy(buffer, "2");
 			//Cargem al buffer totes les dades que volem enviar
 			strcpy(buffer+1, nou.nom);
-			memcpy(buffer+51, &nou.id, sizeof(nou.id));
-			memcpy(buffer+55, &nou.mitjana, sizeof(nou.mitjana));
-			memcpy(buffer+59, &nou.edat, sizeof(nou.edat));
+			memcpy(buffer+51, &nou.id, sizeof(int));
+			memcpy(buffer+55, &nou.mitjana, sizeof(float));
+			memcpy(buffer+59, &nou.edat, sizeof(int));
 			
 			//enviem el buffer a traves del sock i borrem tota l'informacio del buffer (incluim un control d'errors al send)
 			if (send(sock, buffer, BUFFER_SIZE, 0) < 0) {
@@ -185,10 +187,11 @@ int main(int argc, char *argv[]) {
 			printf("Resposta del servidor: %s\n", buffer);
 
 			break;
+		}
 
 		case 3:
 			
-
+			alumne nou;
 
 			// Consultar Alumne
 			printf("Introdueix nom de l'alumne: ");
@@ -213,16 +216,6 @@ int main(int argc, char *argv[]) {
 			}
 			printf("Resposta del servidor: %s\n", buffer);
 			//Crearem una funcio que agafara el buffer(60 posicions) que tindra la id, el nom, la mitja i l'edat, i les ensenyara per pantalla
-
-			printf("ID: %d\n", buffer[1]);
-				//Per posar el nom hem de copiar el nom que teniem guardat a nou.nom
-			printf("Nom: %s\n", nou.nom);
-			printf("Mitjana: %.2d\n", buffer[55]);
-			printf("Edat: %d\n", buffer[59]);
-			
-			
-			
-
 			break;
 
 		case 4: {
@@ -232,6 +225,7 @@ int main(int argc, char *argv[]) {
 			int num_alumnes = 0;
 			int trans;
 			int i;
+			alumne nou;
 
 			// Enviar la comanda al servidor perque sapiga que ha de llistar
 			memset(buffer, 0, BUFFER_SIZE);
@@ -269,13 +263,14 @@ int main(int argc, char *argv[]) {
 				//printf("%d. ID: %d | Nom: %s | Mitjana: %.2f | Edat: %d\n",
 				//	 i + 1, nou.id, nou.nom, nou.mitjana, nou.edat);
 				
-				printf("ID: %d\n", buffer[51]);
-				//Per posar el nom hem de copiar el nom que teniem guardat a nou.nom
-				memcpy(nou.nom, &buffer[1], 50);
-				printf("Nom: %s\n", nou.nom);
-				printf("Mitjana: %.2d\n", buffer[52]);
-				printf("Edat: %d\n", buffer[53]);
-			
+				memcpy(nou.nom, buffer + 1, 50);
+				memcpy(&nou.id, buffer + 51, sizeof(int));
+				memcpy(&nou.mitjana, buffer + 55, sizeof(float));
+				memcpy(&nou.edat, buffer + 59, sizeof(int));
+
+
+				printf("ID: %d | Nom: %s | Mitjana: %.2f | Edat: %d\n", 
+       					nou.id, nou.nom, nou.mitjana, nou.edat);
 			}
 
 			printf("--------------------------------------\n");
@@ -290,6 +285,7 @@ int main(int argc, char *argv[]) {
 			int id_eliminar;
 			int id_net;
 			int dades_rebudes;
+			alumne nou;
 
 			// Enviar la comanda al servidor perque sapiga que ha de fer
 			memset(buffer, 0, BUFFER_SIZE);
