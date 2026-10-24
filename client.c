@@ -70,7 +70,8 @@ int main(int argc, char *argv[]) {
 	// Afegiu comentari sobre què són aquests 3 paràmetres,
 	// per què s'utilitzen els valors que hi ha,
 	// i per què s'utilitza htons()
-
+	// htons: De nombre enter desde el format natiu del client (el nostre ordinador) al format estandar de la xarxa
+	// i per què s'utilitzen els valors que hi ha
 	serv_addr.sin_family = AF_INET;
 	serv_addr.sin_port = htons(port);
 

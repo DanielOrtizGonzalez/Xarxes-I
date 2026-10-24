@@ -41,6 +41,16 @@ int main(int argc, char *argv[]) {
 	llista_alumnes[1].mitjana = 9.0;
 	llista_alumnes[1].edat = 22;
 
+	llista_alumnes[1].id = 3;
+	strcpy(llista_alumnes[1].nom, "Alex");
+	llista_alumnes[1].mitjana = 5.2;
+	llista_alumnes[1].edat = 24;
+
+	llista_alumnes[1].id = 4;
+	strcpy(llista_alumnes[1].nom, "Eric");
+	llista_alumnes[1].mitjana = 8.6;
+	llista_alumnes[1].edat = 19;
+
 	if (argc == 1) {
 		// Cap argument -> port per defecte
 		port = DEFAULT_PORT;
@@ -75,7 +85,6 @@ int main(int argc, char *argv[]) {
 	// nthol: De nombre enter desde el format estandar de la xarxa al format natiu del client (el nostre ordinador)
 	// htons: De nombre enter desde el format natiu del client (el nostre ordinador) al format estandar de la xarxa
 	// i per què s'utilitzen els valors que hi ha
-
 	address.sin_family = AF_INET;
 	address.sin_addr.s_addr = htonl(INADDR_ANY);	// Per a INADDR_ANY no faria falta htonl(), però li posem per coherència
 	address.sin_port = htons(port);
