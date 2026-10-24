@@ -119,7 +119,9 @@ int main(int argc, char *argv[]) {
 			exit(EXIT_FAILURE);
 		}
 
-		 while (1) {
+		printf("Client connectat.\n");
+
+		while (1) {
 			memset(buffer, 0, BUFFER_SIZE);
 			
 			// Llegir missatge del client
@@ -133,12 +135,10 @@ int main(int argc, char *argv[]) {
 
 			if(buffer[0] == '2'){
 				if(total_alumnes < 200){
-
 					alumne nou;
+					memset(&nou, 0, sizeof(nou));
 
 					strcpy(nou.nom, buffer+1);
-					nou.nom[strcspn(nou.nom, "\n")] = '\0';  // Eliminar \n final
-					//Posible error amb els sizeof
 					memcpy(&nou.id, buffer+51, sizeof(int));
 					memcpy(&nou.mitjana, buffer+55, sizeof(float));
 					memcpy(&nou.edat, buffer+59, sizeof(int));
@@ -149,59 +149,68 @@ int main(int argc, char *argv[]) {
 					printf("Alumne afegir -> ID: %d, nom: %s, mitjana: %.2f, edat: %d\n", nou.id, nou.nom, nou.mitjana, nou.edat);
 					send(new_socket, "Alumne afegit correctament\n", strlen("Alumne afegit correctament\n"), 0);
 				}else{
-				
+
 					send(new_socket, "Error: Llista d'alumnes plena\n", strlen("Error: Llista d'alumnes plena\n"), 0);
 				}
 			} else if(buffer[0] == '3'){
 
-				char nom_buscar[50] = {0}; // Variable per guardar el nom que el client vol consultar
-               	strncpy(nom_buscar, buffer + 1, 49); // Extraiem el nom copiant des de la posició buffer + 1
-               	nom_buscar[strcspn(nom_buscar, "\n")] = '\0'; // Netegem qualsevol salt de línia (\n) que hagi pogut posar el fgets del client
+				char nom_buscar[50] = {0};
+                strncpy(nom_buscar, buffer + 1, 49);
 
-               	int trobat = -1; // Variable per guardar l'índex de l'alumne si el trobem (-1 vol dir no trobat)
-               	for (int i = 0; i < total_alumnes; i++) { // Recorrem tota la llista d'alumnes actual
-                   	if (strcmp(llista_alumnes[i].nom, nom_buscar) == 0) { // Comparem el nom de cada alumne amb el nom que busquem
-                       	trobat = i; // Si coincideixen, guardem la posició on l'hem trobat
-                       	break; // Sortim del bucle for perquè ja no cal seguir buscant
-                   	}
-               	}
+                int trobat = -1; //Com pot ser la posicio 0
+                for (int i = 0; i < total_alumnes; i++) {
+                    if (strcmp(llista_alumnes[i].nom, nom_buscar) == 0) {
+                        trobat = i;
+                        break;
+                    }
+                }
 
-               	char resposta[BUFFER_SIZE]; // Creem un buffer per preparar el missatge de resposta
-               	memset(resposta, 0, BUFFER_SIZE); // Netegem el buffer de resposta amb zeros
+                memset(resposta, 0, BUFFER_SIZE);
+                if (trobat != -1) {
+                    snprintf(resposta, BUFFER_SIZE, "ID: %d | Nom: %s | Mitjana: %.2f | Edat: %d",
+                             llista_alumnes[trobat].id, llista_alumnes[trobat].nom,
+                             llista_alumnes[trobat].mitjana, llista_alumnes[trobat].edat);
+                } else {
+                    strcpy(resposta, "Error: Alumne no trobat.");
+                }
 
-               	if (trobat != -1) { // Si trobat és diferent de -1, vol dir que l'alumne existeix
-                   	// Formatem un text amb totes les dades perquè el printf("%s", buffer) del teu client ho mostri directament per pantalla
-                   	snprintf(resposta, BUFFER_SIZE, "ID: %d | Nom: %s | Mitjana: %.2f | Edat: %d",
-                       	     llista_alumnes[trobat].id, llista_alumnes[trobat].nom,
-                           	 llista_alumnes[trobat].mitjana, llista_alumnes[trobat].edat);
-    			} 
+                send(new_socket, resposta, strlen(resposta), 0);
 			} else if(buffer[0] == 4){
-				alumne nou;
 				printf("Enviant llista de %d alumnes...\n", total_alumnes);
 
-				int num_net = htonl(total_alumnes); // Convertim el nombre d'alumnes a format de xarxa
-				send(new_socket, &num_net, sizeof(num_net), 0); // Enviem el nombre d'alumnes al client
+                int num_net = htonl(total_alumnes);
+                send(new_socket, &num_net, sizeof(num_net), 0);
 
-				strcpy(buffer+1, nou.nom);
-				memcpy(buffer+51, &nou.id, sizeof(nou.id));
-				memcpy(buffer+52, &nou.mitjana, sizeof(nou.mitjana));
-				memcpy(buffer+53, &nou.edat, sizeof(nou.edat));
-			
-				//enviem el buffer a traves del sock i borrem tota l'informacio del buffer (incluim un control d'errors al send)
-				if (send(sock, buffer, BUFFER_SIZE, 0) < 0) {
-					printf("Error en enviar la comanda\n");
-					break;
-				}
-				memset(buffer, 0, BUFFER_SIZE);
+                for (int i = 0; i < total_alumnes; i++) {
+                    send(new_socket, &llista_alumnes[i], sizeof(alumne), 0);
+                }
 
-				//Rebem la resposta del servidor (incluim un control d'errors al recv);
-				if (recv(sock, buffer, BUFFER_SIZE,0) < 0) {
-				
-					printf("Error en rebre la resposta del servidor\n");
-					break;
-				}
+			} else if(buffer[0] == '5'){
+				int id_net;
+                memcpy(&id_net, buffer + 1, sizeof(int));
+                int id_eliminar = ntohl(id_net);
 
-			} 
+                int trobat = -1;
+                for (int i = 0; i < total_alumnes; i++) {
+                    if (llista_alumnes[i].id == id_eliminar) {
+                        trobat = i;
+                        break;
+                    }
+                }
+
+                memset(resposta, 0, BUFFER_SIZE);
+                if (trobat != -1) {
+                    for (int i = trobat; i < total_alumnes - 1; i++) {
+                        llista_alumnes[i] = llista_alumnes[i + 1];
+                    }
+                    total_alumnes--;
+                    strcpy(resposta, "Alumne eliminat correctament.");
+                } else {
+                    strcpy(resposta, "Error: No s'ha trobat cap alumne amb aquesta ID.");
+                }
+
+                send(new_socket, resposta, strlen(resposta), 0);
+			}
 			
 
 			// A continuació hi ha el codi corresponent a l'opció d'Enviar missatge, amb el retorn d'una cadena fixa,
