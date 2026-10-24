@@ -175,7 +175,9 @@ int main(int argc, char *argv[]) {
                 }
 
                 send(new_socket, resposta, strlen(resposta), 0);
+
 			} else if(buffer[0] == 4){
+				
 				printf("Enviant llista de %d alumnes...\n", total_alumnes);
 
                 int num_net = htonl(total_alumnes);

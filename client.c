@@ -145,7 +145,7 @@ int main(int argc, char *argv[]) {
 		case 2:{
 			
 			// AFEGIR ALUMNE
-			memset(&nou, 0, sizeof(nou))
+			memset(&nou, 0, sizeof(nou));
 
 			//Demanem totes les dades al client i les guardem a una estructura
 			printf("Introdueix la ID: ");
@@ -167,7 +167,7 @@ int main(int argc, char *argv[]) {
 			//Senyalitzem que es la funcio 2 la que estem demanant a la primera posició del buffer
 			buffer[0] = '2';
 			//Cargem al buffer totes les dades que volem enviar
-			strcpy(buffer+1, nou.nom, 49);
+			strncpy(buffer+1, nou.nom, 49);
 			memcpy(buffer+51, &nou.id, sizeof(int));
 			memcpy(buffer+55, &nou.mitjana, sizeof(float));
 			memcpy(buffer+59, &nou.edat, sizeof(int));
@@ -221,8 +221,8 @@ int main(int argc, char *argv[]) {
 			// Llistar Alumne
 			// Declaracio de variables
 			int num_alumnes = 0;
-			int trans = 0;
-
+			int total = 0;
+		
 			// Enviar la comanda al servidor perque sapiga que ha de llistar
 			memset(buffer, 0, BUFFER_SIZE);
 			buffer[0] = 4;
@@ -240,8 +240,8 @@ int main(int argc, char *argv[]) {
 
 			/* Tradueix el format del servidor al formar del client 
 			nthol: De nombre enter desde el format estandar de la xarxa al format natiu del client (el nostre ordinador)*/ 
-			trans = ntohl(num_alumnes);
-			printf("--- Llista d'alumnes (Total de %d) ---\n", trans);
+			total = ntohl(num_alumnes);
+			printf("--- Llista d'alumnes (Total de %d) ---\n", total);
 
 			// Bucle per rebre l'estrucutra i mostrar als alumnes
 			for (int i = 0; i < total; i++) {
