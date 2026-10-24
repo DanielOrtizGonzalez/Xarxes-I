@@ -154,13 +154,11 @@ int main(int argc, char *argv[]) {
 					send(new_socket, "Error: Llista d'alumnes plena\n", strlen("Error: Llista d'alumnes plena\n"), 0);
 				}
 			} else if(buffer[0] == '3'){
-
 				char nom_buscar[50] = {0};
                 strncpy(nom_buscar, buffer + 1, 49);
-				int i;
 
                 int trobat = -1; //Com pot ser la posicio 0
-                for (i = 0; i < total_alumnes; i++) {
+                for (int i = 0; i < total_alumnes; i++) {
                     if (strcmp(llista_alumnes[i].nom, nom_buscar) == 0) {
                         trobat = i;
                         break;
@@ -178,7 +176,7 @@ int main(int argc, char *argv[]) {
 
                 send(new_socket, resposta, strlen(resposta), 0);
 
-			} else if(buffer[0] == 4){
+			} else if(buffer[0] == '4'){
 				
 				printf("Enviant llista de %d alumnes...\n", total_alumnes);
 
@@ -229,22 +227,16 @@ int main(int argc, char *argv[]) {
 				send(new_socket, "Connexió tancada\n", strlen("Connexió tancada\n"), 0);
 				break;	// Sortir del bucle
 			} else { // Si no s'ha trobat cap alumne amb aquest nom
-                    	strcpy(resposta, "Error: Alumne no trobat."); // Posem un missatge d'error a la resposta
-                	}
+				strcpy(resposta, "Error: Alumne no trobat."); // Posem un missatge d'error a la resposta
+            }
 
-                	send(new_socket, resposta, strlen(resposta), 0); // Enviem la resposta amb les dades (o l'error) al client
-
-
-		}
-			
-				
-		send(new_socket, "Missatge rebut\n", strlen("Missatge rebut\n"), 0);
-			
+                send(new_socket, resposta, strlen(resposta), 0); // Enviem la resposta amb les dades (o l'error) al client
+		}		
+		send(new_socket, "Missatge rebut\n", strlen("Missatge rebut\n"), 0);	
 		}
 	{
 		close(new_socket); // Tancar la connexió amb el client
 	}
-
 	close(sock);
 	return 0;
 }

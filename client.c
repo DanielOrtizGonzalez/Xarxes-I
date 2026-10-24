@@ -12,7 +12,6 @@
 
 //Creem l'estructura per guardar les dades de l'alumne
 typedef struct{
-
 	int id; //longitud de 7 nombres maxim
 	char nom[50];
 	float mitjana;
@@ -24,7 +23,6 @@ int main(int argc, char *argv[]) {
 	
 	// Estrucutura d'alumne i llistas
 	alumne nou; 
-	char dades_alumne[BUFFER_SIZE];
 	int sock = 0;
 	struct sockaddr_in serv_addr;
 	char buffer[BUFFER_SIZE] = {0};
@@ -180,7 +178,7 @@ int main(int argc, char *argv[]) {
 			memset(buffer, 0, BUFFER_SIZE);
 
 			//Rebem la resposta del servidor (incluim un control d'errors al recv);
-			if (recv(sock, buffer, BUFFER_SIZE,0) <= 0) {
+			if (recv(sock, buffer, BUFFER_SIZE - 1, 0) <= 0) {
 				
 				printf("Error en rebre la resposta del servidor\n");
 				break;
@@ -194,27 +192,26 @@ int main(int argc, char *argv[]) {
 
 			// Consultar Alumne
 			printf("Introdueix nom de l'alumne: ");
-			fgets(nou.nom, sizeof(nou.nom), stdin);
-			nou.nom[strcspn(nou.nom, "\n")] = '\0';  // Eliminar \n final
+            fgets(nou.nom, sizeof(nou.nom), stdin);
+            nou.nom[strcspn(nou.nom, "\n")] = '\0';
 
-			memset(buffer, 0, BUFFER_SIZE);
-			buffer[0] = '3';
-			strcpy(buffer+1, nou.nom);
-			
-			if (send(sock, buffer, BUFFER_SIZE, 0) < 0) {
-				printf("Error en enviar la comanda\n");
-				break;
-			}
-			memset(buffer, 0, BUFFER_SIZE);
+            memset(buffer, 0, BUFFER_SIZE);
+            buffer[0] = '3';
+            strncpy(buffer + 1, nou.nom, 49);
+            
+            if (send(sock, buffer, BUFFER_SIZE, 0) < 0) {
+                printf("Error en enviar la comanda\n");
+                break;
+            }
 
-			//Rebem la resposta del servidor
-			if (recv(sock, buffer, BUFFER_SIZE,0) < 0) {
-				
-				printf("Error en rebre la resposta del servidor\n");
-				break;
-			}
-			printf("Resposta del servidor: %s\n", buffer);
-			
+            memset(buffer, 0, BUFFER_SIZE);
+            if (recv(sock, buffer, BUFFER_SIZE - 1, 0) <= 0) {
+                printf("Error en rebre la resposta del servidor\n");
+                break;
+            }
+            printf("Resposta del servidor:\n%s\n", buffer);
+            break;
+
 
 		case 4: {
 			
@@ -225,7 +222,7 @@ int main(int argc, char *argv[]) {
 		
 			// Enviar la comanda al servidor perque sapiga que ha de llistar
 			memset(buffer, 0, BUFFER_SIZE);
-			buffer[0] = 4;
+			buffer[0] = '4';
 
 			if(send(sock,buffer, BUFFER_SIZE, 0) < 0){
 				printf("Error en enviar la comanda\n");
