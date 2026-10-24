@@ -24,12 +24,13 @@ int main(int argc, char *argv[]) {
 	int addrlen = sizeof(address);
 	char buffer[BUFFER_SIZE] = {0};
 	char resposta[BUFFER_SIZE] = {0};
+	alumne nou;
 
 	int port;
 	char *endptr;
 
 	alumne llista_alumnes[200];
-	int total_alumnes = 2;
+	int total_alumnes = 4;
 
 	llista_alumnes[0].id = 1;
 	strcpy(llista_alumnes[0].nom, "Joan");
@@ -41,15 +42,15 @@ int main(int argc, char *argv[]) {
 	llista_alumnes[1].mitjana = 9.0;
 	llista_alumnes[1].edat = 22;
 
-	llista_alumnes[1].id = 3;
-	strcpy(llista_alumnes[1].nom, "Alex");
-	llista_alumnes[1].mitjana = 5.2;
-	llista_alumnes[1].edat = 24;
+	llista_alumnes[2].id = 3;
+	strcpy(llista_alumnes[2].nom, "Alex");
+	llista_alumnes[2].mitjana = 5.2;
+	llista_alumnes[2].edat = 24;
 
-	llista_alumnes[1].id = 4;
-	strcpy(llista_alumnes[1].nom, "Eric");
-	llista_alumnes[1].mitjana = 8.6;
-	llista_alumnes[1].edat = 19;
+	llista_alumnes[3].id = 4;
+	strcpy(llista_alumnes[3].nom, "Eric");
+	llista_alumnes[3].mitjana = 8.6;
+	llista_alumnes[3].edat = 19;
 
 	if (argc == 1) {
 		// Cap argument -> port per defecte
@@ -135,10 +136,10 @@ int main(int argc, char *argv[]) {
 
 			if(buffer[0] == '2'){
 				if(total_alumnes < 200){
-					alumne nou;
+					
 					memset(&nou, 0, sizeof(nou));
 
-					strcpy(nou.nom, buffer+1);
+					strncpy(nou.nom, buffer+1, 49);
 					memcpy(&nou.id, buffer+51, sizeof(int));
 					memcpy(&nou.mitjana, buffer+55, sizeof(float));
 					memcpy(&nou.edat, buffer+59, sizeof(int));
@@ -156,9 +157,10 @@ int main(int argc, char *argv[]) {
 
 				char nom_buscar[50] = {0};
                 strncpy(nom_buscar, buffer + 1, 49);
+				int i;
 
                 int trobat = -1; //Com pot ser la posicio 0
-                for (int i = 0; i < total_alumnes; i++) {
+                for (i = 0; i < total_alumnes; i++) {
                     if (strcmp(llista_alumnes[i].nom, nom_buscar) == 0) {
                         trobat = i;
                         break;
