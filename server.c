@@ -226,11 +226,11 @@ int main(int argc, char *argv[]) {
 				printf("Tancant connexió amb el client (PID: %d)...\n", getpid());
 				send(new_socket, "Connexió tancada\n", strlen("Connexió tancada\n"), 0);
 				break;	// Sortir del bucle
-			} else { // Si no s'ha trobat cap alumne amb aquest nom
-				strcpy(resposta, "Error: Alumne no trobat."); // Posem un missatge d'error a la resposta
-            }
+			} //else { // Si no s'ha trobat cap alumne amb aquest nom
+				//strcpy(resposta, "Error: Alumne no trobat."); // Posem un missatge d'error a la resposta
+            //}
 
-                send(new_socket, resposta, strlen(resposta), 0); // Enviem la resposta amb les dades (o l'error) al client
+                //send(new_socket, resposta, strlen(resposta), 0); // Enviem la resposta amb les dades (o l'error) al client
 		}		
 		send(new_socket, "Missatge rebut\n", strlen("Missatge rebut\n"), 0);	
 		}
