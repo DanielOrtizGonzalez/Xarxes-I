@@ -1,4 +1,7 @@
 // server.c
+// Grup: 10f
+// Daniel Ortiz González
+// Jordi Martorell Planas
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -31,6 +34,8 @@ int main(int argc, char *argv[]) {
 
 	alumne llista_alumnes[200];
 	int total_alumnes = 4;
+
+	// Crearem uns quants alumnes directament a la llista, per fer les proves necessaries.
 
 	llista_alumnes[0].id = 1;
 	strcpy(llista_alumnes[0].nom, "Joan");
@@ -123,6 +128,7 @@ int main(int argc, char *argv[]) {
 		printf("Client connectat.\n");
 
 		while (1) {
+			// Netejearem la memoria
 			memset(buffer, 0, BUFFER_SIZE);
 			
 			// Llegir missatge del client
@@ -135,18 +141,23 @@ int main(int argc, char *argv[]) {
 			// i si n'hi ha els arguments, executar-la i tornar el(s) resultat(s)
 
 			if(buffer[0] == '2'){
+				// Afegir alumne
 				if(total_alumnes < 200){
 					
+					// Netejearem la memoria
 					memset(&nou, 0, sizeof(nou));
 
+					// Guardarem les dades de l'alumne a la estructura
 					strncpy(nou.nom, buffer+1, 49);
 					memcpy(&nou.id, buffer+51, sizeof(int));
 					memcpy(&nou.mitjana, buffer+55, sizeof(float));
 					memcpy(&nou.edat, buffer+59, sizeof(int));
 
+					// Guardarem l'alumne a la llista i afegir un més al comptador d'alumnes
 					llista_alumnes[total_alumnes] = nou;
 					total_alumnes++;
 
+					// Mostrarem al servidor les dades de l'alumne que han arribat.
 					printf("Alumne afegir -> ID: %d, nom: %s, mitjana: %.2f, edat: %d\n", nou.id, nou.nom, nou.mitjana, nou.edat);
 					send(new_socket, "Alumne afegit correctament\n", strlen("Alumne afegit correctament\n"), 0);
 				}else{
@@ -154,6 +165,7 @@ int main(int argc, char *argv[]) {
 					send(new_socket, "Error: Llista d'alumnes plena\n", strlen("Error: Llista d'alumnes plena\n"), 0);
 				}
 			} else if(buffer[0] == '3'){
+				// Consultar alumne
 				char nom_buscar[50] = {0};
                 strncpy(nom_buscar, buffer + 1, 49);
 
@@ -165,6 +177,7 @@ int main(int argc, char *argv[]) {
                     }
                 }
 
+				// Netejearem la memoria
                 memset(resposta, 0, BUFFER_SIZE);
                 if (trobat != -1) {
                     snprintf(resposta, BUFFER_SIZE, "ID: %d | Nom: %s | Mitjana: %.2f | Edat: %d",
@@ -173,13 +186,14 @@ int main(int argc, char *argv[]) {
                 } else {
                     strcpy(resposta, "Error: Alumne no trobat.");
                 }
-
+				// Enviarem les dades de l'alumne.
                 send(new_socket, resposta, strlen(resposta), 0);
 
 			} else if(buffer[0] == '4'){
-				
+				// Llistar alumnes
 				printf("Enviant llista de %d alumnes...\n", total_alumnes);
 
+				// Primer de tot pasarem les dades del format de xarxa al del server.
                 int num_net = htonl(total_alumnes);
                 send(new_socket, &num_net, sizeof(num_net), 0);
 
@@ -188,11 +202,16 @@ int main(int argc, char *argv[]) {
                 }
 
 			} else if(buffer[0] == '5'){
-				int id_net;
+				// Eliminar alumne
+ 				int id_net;
+
+				// Rebrem l'ID de l'alumne a eliminar
                 memcpy(&id_net, buffer + 1, sizeof(int));
+				// Pasarem les dades del format de xarxa al del server
                 int id_eliminar = ntohl(id_net);
 
                 int trobat = -1;
+				// Buscarem a l'alumne en qüestió.
                 for (int i = 0; i < total_alumnes; i++) {
                     if (llista_alumnes[i].id == id_eliminar) {
                         trobat = i;
@@ -200,7 +219,9 @@ int main(int argc, char *argv[]) {
                     }
                 }
 
+				// Netejearem la memoria
                 memset(resposta, 0, BUFFER_SIZE);
+				// Comprobarem si l'alumne s'ha trobat i l'eliminarem.
                 if (trobat != -1) {
                     for (int i = trobat; i < total_alumnes - 1; i++) {
                         llista_alumnes[i] = llista_alumnes[i + 1];
@@ -210,7 +231,7 @@ int main(int argc, char *argv[]) {
                 } else {
                     strcpy(resposta, "Error: No s'ha trobat cap alumne amb aquesta ID.");
                 }
-
+				// Enviem el missatge a l'usuari.
                 send(new_socket, resposta, strlen(resposta), 0);
 			}
 			
@@ -226,11 +247,11 @@ int main(int argc, char *argv[]) {
 				printf("Tancant connexió amb el client (PID: %d)...\n", getpid());
 				send(new_socket, "Connexió tancada\n", strlen("Connexió tancada\n"), 0);
 				break;	// Sortir del bucle
-			} //else { // Si no s'ha trobat cap alumne amb aquest nom
-				//strcpy(resposta, "Error: Alumne no trobat."); // Posem un missatge d'error a la resposta
-            //}
+			} 
+				
+            
 
-                //send(new_socket, resposta, strlen(resposta), 0); // Enviem la resposta amb les dades (o l'error) al client
+               
 		}		
 		send(new_socket, "Missatge rebut\n", strlen("Missatge rebut\n"), 0);	
 		}

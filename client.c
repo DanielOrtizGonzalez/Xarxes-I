@@ -1,4 +1,7 @@
 // client.c
+// Grup: 10f
+// Daniel Ortiz González
+// Jordi Martorell Planas
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -12,7 +15,8 @@
 
 //Creem l'estructura per guardar les dades de l'alumne
 typedef struct{
-	int id; //longitud de 7 nombres maxim
+	//longitud de 7 nombres maxim
+	int id; 
 	char nom[50];
 	float mitjana;
 	int edat;
@@ -73,12 +77,13 @@ int main(int argc, char *argv[]) {
 	serv_addr.sin_family = AF_INET;
 	serv_addr.sin_port = htons(port);
 
-	inet_pton(AF_INET, domini, &serv_addr.sin_addr);	// Convertir adreça IPv4 a binari
+	// Convertir adreça IPv4 a binari
+	inet_pton(AF_INET, domini, &serv_addr.sin_addr);	
 		
 	// Connectar amb el servidor
 	// Afegiu comentari explicant els arguments
-	if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
-		printf("\nConnexio fallida\n");
+	if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) { //El "sock" es la direccio del socket al que ens volem connectar, "(struct sockaddr *)&serv_addr" es l'adreça del servidor transformada en un tipus que el client la pugui entendre,
+		printf("\nConnexio fallida\n"); //"sizeof(serv_addr)" es la mida de l'adreça del servidor
 		return -1;
 	}
 
@@ -86,8 +91,10 @@ int main(int argc, char *argv[]) {
 
 	int option;
 
-	while (1) {
-		memset(buffer, 0, sizeof(buffer)); // Netegem el buffer
+	//Sempre es fara el while fins que hi hagi un break
+	while (1) { 
+		// Netegem el buffer
+		memset(buffer, 0, sizeof(buffer)); 
 
 		// Menú principal
 		// Cal que implementeu un petit servei remot amb almenys 4 funcionalitats noves
@@ -105,7 +112,8 @@ int main(int argc, char *argv[]) {
 		printf("Opció: ");
 
 		scanf("%d", &option);
-		while (getchar() != '\n');  // buida el buffer fins al salt de línia
+		// buida el buffer fins al salt de línia
+		while (getchar() != '\n');  
 
 		switch (option)
 		{
@@ -114,7 +122,8 @@ int main(int argc, char *argv[]) {
 			if (option==1){
 				printf("Introdueix el missatge a enviar ('EXIT' per tancar el servidor i sortir): ");
 				fgets(cadena, BUFFER_SIZE, stdin);
-				cadena[strcspn(cadena, "\n")] = '\0';  // Eliminar \n final
+				// Eliminar \n final
+				cadena[strcspn(cadena, "\n")] = '\0';  
 			} else {
 				strcpy(cadena, "EXIT");
 			}
@@ -130,7 +139,8 @@ int main(int argc, char *argv[]) {
 			// Afegiu comentari explicant què fa i per què s'utilitza memset
 			// Afegiu comentari explicant els arguments de la crida a recv()
 
-			memset(buffer, 0, BUFFER_SIZE); //memset serveix per netejar el buffer amb " "
+			//memset serveix per netejar el buffer amb " "
+			memset(buffer, 0, BUFFER_SIZE); 
 			recv(sock, buffer, BUFFER_SIZE,0);
 			printf("Resposta del servidor: %s\n", buffer);
 
@@ -147,23 +157,28 @@ int main(int argc, char *argv[]) {
 
 			//Demanem totes les dades al client i les guardem a una estructura
 			printf("Introdueix la ID: ");
-			scanf("%d", &nou.id); //Posible error al deixar el \n(el fgets pot ser que l'entengui com una linea acabada deixant la cadena buida)
-			while (getchar() != '\n');  // buida el buffer fins al salt de línia
+			scanf("%d", &nou.id); 
+			// Buida el buffer fins al salt de línia perque no hi hagin problemes al introduir el nom
+			while (getchar() != '\n'); 
 
 			printf("Introdueix el nom: ");
 			fgets(nou.nom, sizeof(nou.nom), stdin);
-			nou.nom[strcspn(nou.nom, "\n")] = '\0';  // Eliminar \n final
+			// Eliminar \n final i el canvia per un \0
+			nou.nom[strcspn(nou.nom, "\n")] = '\0';  
 
 			printf("Introdueix mitjana: ");
 			scanf("%f", &nou.mitjana);
 			
 			printf("Introdueix edat: ");
 			scanf("%d", &nou.edat);
-			while (getchar() != '\n');  // buida el buffer fins al salt de línia
-
+			// Buida el buffer fins al salt de línia perque no hi hagin problemes al introduir el nom
+			while (getchar() != '\n');  
+			
+			//Netegem el buffer 
 			memset(buffer, 0, BUFFER_SIZE);
 			//Senyalitzem que es la funcio 2 la que estem demanant a la primera posició del buffer
 			buffer[0] = '2';
+			
 			//Cargem al buffer totes les dades que volem enviar
 			strncpy(buffer+1, nou.nom, 49);
 			memcpy(buffer+51, &nou.id, sizeof(int));
@@ -183,6 +198,7 @@ int main(int argc, char *argv[]) {
 				printf("Error en rebre la resposta del servidor\n");
 				break;
 			}
+			// Mostrem la resposta del servidor
 			printf("Resposta del servidor: %s\n", buffer);
 
 			break;
@@ -191,24 +207,29 @@ int main(int argc, char *argv[]) {
 		case 3:
 
 			// Consultar Alumne
+			// Demanem el nom de l'alumne que volem consultar i canviem el "\n" per un "\0"
 			printf("Introdueix nom de l'alumne: ");
             fgets(nou.nom, sizeof(nou.nom), stdin);
             nou.nom[strcspn(nou.nom, "\n")] = '\0';
-
+			// Netegem el buffer 
             memset(buffer, 0, BUFFER_SIZE);
-            buffer[0] = '3';
-            strncpy(buffer + 1, nou.nom, 49);
-            
+            // Indiquem que es la tercera opcio
+			buffer[0] = '3';
+            // Copia al buffer el nom de l'alumne pero nomes fins a 49 caracters
+			strncpy(buffer + 1, nou.nom, 49);
+            // Enviem el buffer al servidor el nom del alumne i posem un control d'errors
             if (send(sock, buffer, BUFFER_SIZE, 0) < 0) {
                 printf("Error en enviar la comanda\n");
                 break;
             }
-
+			// Netegem el buffer 
             memset(buffer, 0, BUFFER_SIZE);
+			// Rebem les dades del alumne i posem un control d'errors
             if (recv(sock, buffer, BUFFER_SIZE - 1, 0) <= 0) {
                 printf("Error en rebre la resposta del servidor\n");
                 break;
             }
+			// Mostrem les dades del alumne
             printf("Resposta del servidor:\n%s\n", buffer);
             break;
 
@@ -222,8 +243,10 @@ int main(int argc, char *argv[]) {
 		
 			// Enviar la comanda al servidor perque sapiga que ha de llistar
 			memset(buffer, 0, BUFFER_SIZE);
+			// Indiquem l'opció al servidor.
 			buffer[0] = '4';
 
+			// Comprovació de que el servidor rep les dades corre
 			if(send(sock,buffer, BUFFER_SIZE, 0) < 0){
 				printf("Error en enviar la comanda\n");
 				break;
@@ -263,25 +286,35 @@ int main(int argc, char *argv[]) {
 			int id_eliminar;
 			int id_net;
 
+			// Demarem a l'usuari que introdueixi la ID de l'alumne a elimianr
 			printf("Introdueix la ID de l'alumne a eliminar: ");
             scanf("%d", &id_eliminar);
+			// Buida el buffer fins al salt de línia perque no hi hagin problemes al introduir el nom
             while (getchar() != '\n');
-            
+			
+			// Netejearem la memoria
             memset(buffer, 0, BUFFER_SIZE);
+			// Notificarem que es l'opció 5.
             buffer[0] = '5';
+			// Transforma de format de xarxa a format local
             id_net = htonl(id_eliminar);
+			// Copia el valor que hi ha al buffer.
             memcpy(buffer + 1, &id_net, sizeof(int));
-
+			
+			// Enivem tot el contigut del buffer per enviar al servidor
             if (send(sock, buffer, BUFFER_SIZE, 0) < 0) {
                 printf("Error en enviar la sol·licitud\n");
                 break;
             }
-
+			
+			// Netejearem la memoria
             memset(buffer, 0, BUFFER_SIZE);
+			// Esperem a rebre les dades del servidor.
             if (recv(sock, buffer, BUFFER_SIZE - 1, 0) <= 0) {
                 printf("Error en rebre la confirmacio del servidor\n");
                 break;
             }
+			// Mostrem el missatge que ens retorna el servidor.
             printf("Resposta del servidor: %s\n", buffer);
             break;
 		}
